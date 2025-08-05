@@ -1,5 +1,25 @@
 {
   "appId": "com.byteduel.saumondeluxe",
   "appName": "Byte Duel",
-  "webDir": "public"
+  "webDir": "public",
+  "plugins": {
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#000000",
+      "overlaysWebView": false
+    },
+    "Keyboard": {
+      "resize": "native"
+    }
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false,
+    "initialFocus": false,
+    "appendUserAgent": "",
+    "backgroundColor": "#000000",
+    "overrideUserAgent": "",
+    "useLegacyBridge": false
+  }
 }

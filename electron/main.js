@@ -9,7 +9,8 @@ function createWindow() {
             contextIsolation: true
         },
         autoHideMenuBar: true,
-        icon: path.join(__dirname, '../resources', 'icon.png')
+        icon: path.join(__dirname, '../resources', 'icon.png'),
+        fullscreen: true  // Lance en plein écran
     });
 
     win.loadFile(path.join(__dirname, '../public', 'index.html'));

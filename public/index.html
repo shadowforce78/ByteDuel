@@ -5,6 +5,31 @@
         <meta name="viewport"
             content="viewport-fit=cover, width=device-width, initial-scale=1.0">
         <title>Byte Duel</title>
+        
+        <!-- Configuration pour le plein écran sur mobile -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="theme-color" content="#000000">
+        
+        <script type="module">
+            import { StatusBar } from '@capacitor/status-bar';
+            import { Capacitor } from '@capacitor/core';
+            
+            // Configuration du plein écran immersif pour Android
+            if (Capacitor.isNativePlatform()) {
+                document.addEventListener('deviceready', async () => {
+                    if (Capacitor.getPlatform() === 'android') {
+                        try {
+                            await StatusBar.hide();
+                            await StatusBar.setOverlaysWebView({ overlay: true });
+                        } catch (error) {
+                            console.log('StatusBar configuration error:', error);
+                        }
+                    }
+                });
+            }
+        </script>
     </head>
     <body>
 
