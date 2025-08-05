@@ -5,13 +5,14 @@
         <meta name="viewport"
             content="viewport-fit=cover, width=device-width, initial-scale=1.0">
         <title>Byte Duel</title>
-        
+
         <!-- Configuration pour le plein écran sur mobile -->
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="theme-color" content="#000000">
-        
+
         <script type="module">
             import { StatusBar } from '@capacitor/status-bar';
             import { Capacitor } from '@capacitor/core';
@@ -30,14 +31,22 @@
                 });
             }
         </script>
-        <script>
-            // Après quelques secondes, on redirige vers le menu
-            setTimeout(() => {
-                window.location.href = './pages/menu.html';
-            }, 5000);
-        </script>
+
+        <script src="../js/profile.js" type="module"></script>
+        <script src="../js/menu-combat.js" type="module"></script>
     </head>
     <body>
-
+        <!-- Header profile -->
+        <div class="profileheader">
+            <!-- Injected by script -->
+        </div>
+        <!-- Button combat -->
+        <div class="combatsection">
+            <!-- Injected by script -->
+        </div>
+        <!-- Footer de selection de menu -->
+        <div class="menusection">
+            <!-- Injected by script -->
+        </div>
     </body>
 </html>

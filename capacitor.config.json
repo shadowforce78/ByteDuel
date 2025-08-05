@@ -4,9 +4,8 @@
   "webDir": "public",
   "plugins": {
     "StatusBar": {
-      "style": "DARK",
-      "backgroundColor": "#000000",
-      "overlaysWebView": false
+      "style": "Dark",
+      "overlaysWebView": true
     },
     "Keyboard": {
       "resize": "native"
@@ -18,8 +17,9 @@
     "webContentsDebuggingEnabled": false,
     "initialFocus": false,
     "appendUserAgent": "",
-    "backgroundColor": "#000000",
     "overrideUserAgent": "",
-    "useLegacyBridge": false
+    "useLegacyBridge": false,
+    "hideSystemUI": true,
+    "immersiveMode": true
   }
 }
