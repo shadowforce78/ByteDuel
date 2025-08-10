@@ -2,3 +2,8 @@ node_modules/
 android/
 ios/
 package-lock.json
+server/env
+server/__pycache__/
+server/schema/__pycache__/
+server/service/__pycache__/
+server/.env
