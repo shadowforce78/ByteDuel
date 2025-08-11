@@ -1,6 +1,3 @@
-// Simple, functional login/register UI rendered with JS only (no CSS)
-// No real authentication is performed; we only collect and display form data.
-
 document.addEventListener('DOMContentLoaded', () => {
 	const root = document.querySelector('.logForm');
 	if (!root) {
