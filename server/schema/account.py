@@ -4,6 +4,7 @@ accountSchema = {
     "email": str,
     "email_lower": str,
     "password_hash": str,
+    "profileID": str
 }
 
 
