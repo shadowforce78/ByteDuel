@@ -6,6 +6,8 @@ import dotenv
 import pymongo
 import bcrypt
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 
@@ -182,3 +184,20 @@ def validate(body: ValidateBody):
         "ok": True,
         "user": {"id": str(acc.get("_id")), "username": acc.get("username"), "email": acc.get("email")},
     }
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc: RequestValidationError):
+    # Transform FastAPI's default validation error into simpler list
+    simplified = []
+    for err in exc.errors():
+        loc = ".".join(str(x) for x in err.get("loc", []) if x not in ("body",))
+        simplified.append(f"{loc}: {err.get('msg')}")
+    return JSONResponse(
+        status_code=422,
+        content={
+            "ok": False,
+            "error": "Validation failed",
+            "errors": simplified,
+        },
+    )

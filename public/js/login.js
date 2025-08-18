@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	btnRegister.addEventListener('click', () => showForm('register'));
 
 			// Config: allow overriding API base via window.BYTE_DUEL_API
-			// If running from file:// or capacitor://, fallback to localhost:8000
+			// If running from file:// or capacitor://, fallback to localhost:8000 (FastAPI default)
 			const computedOrigin = (location.origin && /^https?:/i.test(location.origin)) ? location.origin : 'http://localhost:8000';
 			const API_BASE = (window.BYTE_DUEL_API || computedOrigin).replace(/\/$/, '');
 
@@ -84,10 +84,16 @@ document.addEventListener('DOMContentLoaded', () => {
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(body),
 			});
-			const json = await res.json().catch(() => ({}));
+			let json = {};
+			try { json = await res.json(); } catch (_) {}
 			if (!res.ok || json.ok === false) {
-				const msg = json?.detail || json?.error || `HTTP ${res.status}`;
-				throw new Error(msg);
+				let msg = json?.detail || json?.error || `HTTP ${res.status}`;
+				if (json.errors && Array.isArray(json.errors)) {
+					msg += ' -> ' + json.errors.join(' | ');
+				}
+				const err = new Error(msg);
+				err.payload = json;
+				throw err;
 			}
 			return json;
 		};
@@ -95,19 +101,30 @@ document.addEventListener('DOMContentLoaded', () => {
 		// Handlers
 		loginForm.addEventListener('submit', async (e) => {
 			e.preventDefault();
+			const data = Object.fromEntries(new FormData(loginForm).entries());
+			// Basic validation (email + password required)
+			if (!data.email) {
+				status.textContent = 'Veuillez entrer votre email.';
+				return;
+			}
+			const emailOk = /^[^@\s]+@[^@\s.]+\.[^@\s]+$/.test(data.email);
+			if (!emailOk) {
+				status.textContent = 'Email invalide.';
+				return;
+			}
+			if (!data.password || data.password.length < 6) {
+				status.textContent = 'Mot de passe trop court (6 caractères minimum).';
+				return;
+			}
 			status.textContent = 'Connexion en cours...';
 			try {
-				const data = Object.fromEntries(new FormData(loginForm).entries());
-				const payload = data.email
-					? { email: data.email, password: data.password }
-					: { username: data.username, password: data.password };
+				const payload = { email: data.email, password: data.password };
 				const res = await postJSON('/auth/login', payload);
 				if (res.key) {
 					localStorage.setItem('auth_key', res.key);
 				}
 				status.textContent = 'Connecté ! Redirection...';
-				// Redirect to menu
-				window.location.href = '/pages/menu.html';
+				window.location.href = '../pages/menu.html';
 			} catch (err) {
 				status.textContent = `Erreur: ${err.message}`;
 			}
@@ -118,6 +135,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			const data = Object.fromEntries(new FormData(registerForm).entries());
 			if (!data.password || data.password !== data.password2) {
 				status.textContent = 'Les mots de passe ne correspondent pas.';
+				return;
+			}
+			// Email validation simple (évite un aller-retour inutile)
+			const emailOk = /^[^@\s]+@[^@\s.]+\.[^@\s]+$/.test(data.email);
+			if (!emailOk) {
+				status.textContent = "Email invalide (pas de point juste après @).";
+				return;
+			}
+			if (data.password.length < 6) {
+				status.textContent = 'Mot de passe trop court (6 caractères minimum).';
 				return;
 			}
 			status.textContent = "Inscription en cours...";
@@ -131,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					localStorage.setItem('auth_key', res.key);
 				}
 				status.textContent = 'Compte créé ! Redirection...';
-				window.location.href = '/pages/menu.html';
+				window.location.href = '../pages/menu.html';
 			} catch (err) {
 				status.textContent = `Erreur: ${err.message}`;
 			}
