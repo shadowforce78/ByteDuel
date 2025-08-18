@@ -7,8 +7,8 @@ accountSchema = {
 }
 
 
-def validate_profile(profile: dict) -> bool:
+def validate_account(account: dict) -> bool:
     for key, value in accountSchema.items():
-        if key not in profile or not isinstance(profile[key], value):
+        if key not in account or not isinstance(account[key], value):
             return False
     return True
